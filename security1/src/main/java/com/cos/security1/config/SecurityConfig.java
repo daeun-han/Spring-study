@@ -27,7 +27,17 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/user/**").authenticated() //인증
 				.requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER") //권한
 				.requestMatchers("/admin/**")
-				.hasAnyRole("ADMIN").anyRequest().permitAll());
+				.hasAnyRole("ADMIN").anyRequest().permitAll())
+		.formLogin((formLogin) ->
+		formLogin
+
+		// .usernameParameter("username") // 파라미터로 보낼 이름값 설정하는 부분. username이라고 안쓰고 다른이름 쓰고 싶은 경우 for loadUserByUsername
+		// .passwordParameter("password")
+		.loginPage("/loginForm")
+		// .failureUrl("/authentication/login?failed")
+		.loginProcessingUrl("/login") // login주소가 호출되면 시큐리티가 낚아채서 대신 로그인 진행
+		.defaultSuccessUrl("/")
+		);
 
 		return http.build();
 	}
