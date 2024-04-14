@@ -23,30 +23,23 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf(CsrfConfigurer::disable);
-		http.sessionManagement((sessionManagement) -> 
-								sessionManagement
-									.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-		http.formLogin((form)->
-						form.disable());
-		http.httpBasic((basic)->
-						basic.disable());
-		http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/user/**").authenticated() //인증
-				.requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER") //권한
-				.requestMatchers("/admin/**")
-				.hasAnyRole("ADMIN").anyRequest().permitAll())
-		.formLogin((formLogin) ->
-		formLogin
-
-		// .usernameParameter("username") // 파라미터로 보낼 이름값 설정하는 부분. username이라고 안쓰고 다른이름 쓰고 싶은 경우 for loadUserByUsername
-		// .passwordParameter("password")
-		.loginPage("/loginForm")
-		// .failureUrl("/authentication/login?failed")
-		.loginProcessingUrl("/login") // login주소가 호출되면 시큐리티가 낚아채서 대신 로그인 진행
-		.defaultSuccessUrl("/")
-		);
-
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+	    http.csrf(CsrfConfigurer::disable);
+	    http.authorizeHttpRequests(authorize -> authorize
+	            // "/user/~" 이 주소로 들어오면 인증이 필요함 -> 인증만 되면 들어갈 수 있는 주소!
+	            .requestMatchers("/user/**").authenticated()
+	            // "/manager/~" 이 주소로 들어가기 위해서는 Admin과 Manager 권한이 있는 사람만 들어올 수 있음
+	            .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
+	            // "/admin/**" 이 주소로 들어가기 위해서는 Admin 권한이 있는 사람만 들어올 수 있음
+	            .requestMatchers("/admin/**").hasAnyRole("ADMIN")
+	            // 설정한 주소가 아니면 누구나 들어갈 수 있음
+	            .anyRequest().permitAll())
+	    		.formLogin((formLogin) ->
+	    		formLogin
+	    		.loginPage("/loginForm")
+	    		.loginProcessingUrl("/login") // login주소가 호출되면 시큐리티가 낚아채서 대신 로그인 진행
+	    		.defaultSuccessUrl("/")
+	    		);
 		return http.build();
 	}
 }
