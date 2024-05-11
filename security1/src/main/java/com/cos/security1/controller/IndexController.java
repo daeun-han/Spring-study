@@ -26,13 +26,15 @@ public class IndexController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-    @GetMapping("/test/login")
+    @GetMapping("/test/login") // UserDetails -> PrincipalDetails도 가능
     public @ResponseBody String testLogin(Authentication authentication, @AuthenticationPrincipal PrincipalDetails userDetails) { // DI(의존성 주입)
-        System.out.println("/test/login =================");
+        System.out.println("/test/login");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("authentication : " + principalDetails.getUser());
-        System.out.println("userDetails : " + userDetails.getUser());
-        return "세션 정보 확인하기";
+        //System.out.println("authentication : " + authentication.getPrincipal());
+        System.out.println("authentication : " + principalDetails.getUsername());
+        //System.out.println("userDetails : " + principalDetails.getUsername());
+        System.out.println("userDetails : " + userDetails.getUsername());
+        return "세션 정보 확인";
     }
 
     @GetMapping("/test/oauth/login")
@@ -50,7 +52,8 @@ public class IndexController {
 	}
 	
 	@GetMapping("/user")
-	public @ResponseBody String user() {
+    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+        System.out.println("principalDetails: " + principalDetails.getUser());
 		return "유저 페이지입니다.";
 	}
 

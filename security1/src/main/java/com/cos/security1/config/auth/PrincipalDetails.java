@@ -23,11 +23,19 @@ import lombok.Data;
 public class PrincipalDetails implements UserDetails, OAuth2User{
 
 	private User user; //콤포지션
+	private Map<String, Object> attributes;
 
-	public PrincipalDetails(User user) {
-		super();
-		this.user = user;
-	}
+    // 일반 로그인
+    public PrincipalDetails(User user){
+        this.user = user;
+    }
+
+    // OAuth 로그인
+    // 로그인을 통해 받은 정보들을 그대로 담아서 return
+    public PrincipalDetails(User user, Map<String, Object> attributes){ // 생성자 오버로딩
+        this.user = user;
+        this.attributes = attributes;
+    }
 	
 	@Override
 	public String getPassword() {

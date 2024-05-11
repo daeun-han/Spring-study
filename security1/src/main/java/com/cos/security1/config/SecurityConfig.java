@@ -23,10 +23,10 @@ public class SecurityConfig {
     
 	// 해당 메서드의 리턴되는 오브젝트를 IoC로 등록해준다.
 	// 비밀번호 암호화
-	@Bean
-	public BCryptPasswordEncoder encodePwd() {
-		return new BCryptPasswordEncoder();
-	}
+//	@Bean
+//	public BCryptPasswordEncoder encodePwd() {
+//		return new BCryptPasswordEncoder();
+//	}
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
